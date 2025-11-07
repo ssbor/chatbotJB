@@ -562,8 +562,8 @@ async def ask(req: AskRequest) -> AskResponse:
 
             client_oa = OpenAI(api_key=openai_key)
             system_prompt = (
-                "Jsi asistent, který odpovídá stručně a přesně pouze na základě poskytnutého kontextu. "
-                "Pokud odpověď nelze najít v kontextu, řekni, že ji v dokumentu nemáš."
+                "Jsi asistent, který odpovídá stručně,lidsky a přesně pouze na základě poskytnutého kontextu. "
+                "Pokud odpověď nelze najít v kontextu, řekni, že ji v dokumentu nemáš a je doporučeno kontaktovat pořadatele."
             )
             user_prompt = (
                 f"Kontext:\n{context}\n\nOtázka: {req.question}\n"
@@ -661,3 +661,4 @@ async def ask(req: AskRequest) -> AskResponse:
 # --- Mount static frontend last so it doesn't overshadow API routes ---
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+
