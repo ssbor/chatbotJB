@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF Chatbot</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: #111827;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #60a5fa;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; height: 100vh; display: grid; place-items: center;
+        background: radial-gradient(800px 800px at 50% 30%, #111827, #0b1020), var(--bg);
+        color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+        /* Text resize adjust for Safari/Chrome Android */
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        /* User select compatibility for Safari */
+        -webkit-user-select: text;
+        user-select: text;
+      }
+      .card {
+        width: min(680px, 92vw);
+        background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px; padding: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+        /* Backdrop blur with Safari prefix */
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+      }
+      h1 { margin: 0 0 4px 0; font-weight: 600; letter-spacing: 0.2px; }
+      p { margin: 0; color: var(--muted); }
+      .sp { height: 18px; }
+      .row { display: flex; gap: 10px; }
+      .search {
+        display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
+      }
+      input[type="text"], input[type="password"] {
+        width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.04); color: var(--text); font-size: 16px; outline: none;
+      }
+      button.primary {
+        background: var(--accent); color: #0b1020; border: none; border-radius: 12px; padding: 14px 18px; font-weight: 700; cursor: pointer;
+      }
+      .answer {
+        white-space: pre-wrap; line-height: 1.5; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px; padding: 14px; font-size: 15px;
+      }
+      details { border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 12px; }
+      summary { cursor: pointer; color: var(--muted); }
+      .sources { color: var(--muted); font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Chatbot</h1>
+  <p>Dotazuj se na půlmaraton</p>
+  <p id="genStatus" style="margin-top:6px; font-size: 13px; color: var(--muted);"></p>
+        <p id="apiInfo" style="margin-top:4px; font-size: 12px; color: var(--muted);">
+          Server API: <span id="apiCurrent">(stejné jako tato stránka)</span>
+          <button id="btnSetApi" style="margin-left:8px; padding:6px 10px; border:1px solid rgba(255,255,255,0.2); border-radius:8px; background:transparent; color:var(--text); cursor:pointer;">Nastavit server</button>
+        </p>
+      <div class="sp"></div>
+
+      <div class="search">
+        <input id="question" type="text" placeholder="Zadejte dotaz…" />
+        <button class="primary" id="btnAsk">Zeptat se</button>
+      </div>
+
+      <div class="sp"></div>
+      <div id="answer" class="answer" style="display:none"></div>
+      <div class="sp"></div>
+      <div id="sources" class="sources"></div>
+    </div>
+
+    <script>
+        // --- Konfigurace adresy backendu ---
+        // Pořadí zdrojů: window.BACKEND_URL > ?api=... > localStorage(API_BASE) > prázdné (relativní)
+        const savedApi = (typeof localStorage !== 'undefined' && localStorage.getItem('API_BASE')) || '';
+        const urlApiParam = (new URLSearchParams(location.search).get('api') || '').trim();
+        const injectedApi = (window.BACKEND_URL || '').trim();
+        const API_BASE = (injectedApi || urlApiParam || savedApi || '').replace(/\/?$/, ''); // odstranit případné koncové /
+
+        function apiUrl(path){
+          const p = path.startsWith('/') ? path : '/' + path;
+          if (!API_BASE) return p; // relativní na stejný origin (funguje při společném hostingu)
+          return API_BASE.replace(/\/$/, '') + p;
+        }
+
+      const byId = (id) => document.getElementById(id);
+      async function refreshHealth() {
+        try {
+            const res = await fetch(apiUrl('/health'));
+          const h = await res.json();
+          let txt = 'Odpovědi: ';
+          const gb = h.generation_backend || 'none';
+          if (gb === 'openai') txt += 'OpenAI aktivní';
+          else if (gb === 'ollama') txt += `Ollama (${h?.ollama?.model || ''})`;
+          else txt += 'bez generátoru (jen výpis z dokumentů)';
+          byId('genStatus').textContent = txt;
+            // Info o použitém API serveru
+            byId('apiCurrent').textContent = API_BASE ? API_BASE : '(stejné jako tato stránka)';
+        } catch {}
+      }
+
+      async function askQuestion() {
+        const q = byId('question').value.trim();
+        if (!q) return;
+        byId('answer').style.display = 'block';
+        byId('answer').textContent = 'Vyhledávám odpověď…';
+        byId('sources').textContent = '';
+        try {
+            const res = await fetch(apiUrl('/ask'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: q, k: 5 })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.detail || 'Chyba dotazu');
+          byId('answer').textContent = data.answer || '';
+          let ss = (data.sources || []).map(s => `• ${s.source} (část ${s.chunk_index})`).join('\n');
+          if (data.generation_backend) {
+            const gb = data.generation_backend;
+            const used = data.used_model ? ` (${data.used_model})` : '';
+            const gline = `Generátor: ${gb}${used}${data.generation_status==='fallback' ? ' – použit fallback' : ''}`;
+            ss = gline + (ss ? '\n' + ss : '');
+          }
+          if (data.generation_error) {
+            ss = `[${data.generation_error}]` + (ss ? '\n' + ss : '');
+          }
+          byId('sources').textContent = ss;
+        } catch (e) {
+          byId('answer').textContent = 'Chyba: ' + (e?.message || e);
+        }
+      }
+      byId('btnAsk').addEventListener('click', askQuestion);
+      byId('question').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') askQuestion(); });
+        byId('btnSetApi').addEventListener('click', () => {
+          const val = prompt('Zadejte URL backendu (např. https://moje-api.onrender.com). Nechte prázdné pro relativní volání.', API_BASE || '');
+          if (val === null) return;
+          const cleaned = (val || '').trim().replace(/\/$/, '');
+          try { localStorage.setItem('API_BASE', cleaned); } catch {}
+          location.reload();
+        });
+      refreshHealth();
+    </script>
+  </body>
+</html>
