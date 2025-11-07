@@ -1,0 +1,130 @@
+{
+  "files": {
+    "c:\\Users\\jakub\\Downloads\\propozice_týmový běh 2026  (1).pdf": {
+      "fingerprint": "75e331221b94384c30dad310edbbd8c484aa937f",
+      "doc_id": "local_914c0135b7e97863",
+      "chunks": 36,
+      "name": "propozice_týmový běh 2026  (1).pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "c:\\Users\\jakub\\Downloads\\propozice_půlmaraton 2026.pdf": {
+      "fingerprint": "02d231c54650015855279238e22996c41051ba28",
+      "doc_id": "local_4e6ebc6d5a9cc6a7",
+      "chunks": 38,
+      "name": "propozice_půlmaraton 2026.pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "c:\\Users\\jakub\\Downloads\\propozice_LEAR krajská pětka 2026.pdf": {
+      "fingerprint": "d2e7bbe8fad9fe2ad703e705fa8ff8d984875fe7",
+      "doc_id": "local_d75054afe45f235a",
+      "chunks": 35,
+      "name": "propozice_LEAR krajská pětka 2026.pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "c:\\Users\\jakub\\Downloads\\propozice_OMEXOM krajská desítka 2026.pdf": {
+      "fingerprint": "63c48306501d4c171482f6b4c0b52ac85e8e920a",
+      "doc_id": "local_49109b71f62ee014",
+      "chunks": 35,
+      "name": "propozice_OMEXOM krajská desítka 2026.pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "c:\\Users\\jakub\\Downloads\\propozice_dětské běhy_2026.pdf": {
+      "fingerprint": "ea98c8b6688485958326d3d6a590d746c536490f",
+      "doc_id": "local_620bc5d39a418d72",
+      "chunks": 25,
+      "name": "propozice_dětské běhy_2026.pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "c:\\Users\\jakub\\Downloads\\Souhlas zákonného zástupce_dětské běhy - kopie.pdf": {
+      "fingerprint": "fe19271e8377129a6938ffcfc7f6517a2c29a7d6",
+      "doc_id": "local_4c8bf5dfdb6831cc",
+      "chunks": 7,
+      "name": "Souhlas zákonného zástupce_dětské běhy - kopie.pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "c:\\Users\\jakub\\Downloads\\Souhlas zákonného zástupce.pdf": {
+      "fingerprint": "741259eca576dd15a5516339708b940884344616",
+      "doc_id": "local_5eeeaa5247540219",
+      "chunks": 7,
+      "name": "Souhlas zákonného zástupce.pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "c:\\Users\\jakub\\Downloads\\Poučení o zpracování osobních údajů.pdf": {
+      "fingerprint": "78b27964c9e4dd82504f99c6aab87b5582304d7a",
+      "doc_id": "local_5c357a1d031c2192",
+      "chunks": 30,
+      "name": "Poučení o zpracování osobních údajů.pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "c:\\Users\\jakub\\Downloads\\2026_Závazná pravidla závodů.pdf": {
+      "fingerprint": "f067b509d1695cf8cd4e0554094e365cec858fe6",
+      "doc_id": "local_49ee646da77155e9",
+      "chunks": 20,
+      "name": "2026_Závazná pravidla závodů.pdf",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\README.txt": {
+      "fingerprint": "baed3f3b3abbe8cee14ede90448df2a413934112",
+      "doc_id": "local_b261f0417d269807",
+      "chunks": 2,
+      "name": "README.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\2026_Závazná pravidla závodů.txt": {
+      "fingerprint": "e015183a5e04c098a7dfeb625724a42f912424fb",
+      "doc_id": "local_9559beb3bf4d0971",
+      "chunks": 20,
+      "name": "2026_Závazná pravidla závodů.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\Poučení o zpracování osobních údajů.txt": {
+      "fingerprint": "17709ec630a01a77a435379e8bfdfa544e3c50e2",
+      "doc_id": "local_905b598dc141a2b1",
+      "chunks": 30,
+      "name": "Poučení o zpracování osobních údajů.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\propozice_dětské běhy_2026.txt": {
+      "fingerprint": "81588c3270197ffe1cc521ccb6615768b10f9dc0",
+      "doc_id": "local_94afd38f7425c362",
+      "chunks": 25,
+      "name": "propozice_dětské běhy_2026.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\propozice_LEAR krajská pětka 2026.txt": {
+      "fingerprint": "f118ff5092f4052e07e582b2bb322b57da719877",
+      "doc_id": "local_8a7d57395dd9ef9b",
+      "chunks": 35,
+      "name": "propozice_LEAR krajská pětka 2026.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\propozice_OMEXOM krajská desítka 2026.txt": {
+      "fingerprint": "c08d19e2743d2ed5db299534974296d24d905628",
+      "doc_id": "local_15d19ec49b2b038a",
+      "chunks": 35,
+      "name": "propozice_OMEXOM krajská desítka 2026.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\propozice_půlmaraton 2026.txt": {
+      "fingerprint": "ab4c27f28c9d63f88c1534a87db2a96547146514",
+      "doc_id": "local_78dbb17267b009e6",
+      "chunks": 38,
+      "name": "propozice_půlmaraton 2026.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\Souhlas zákonného zástupce.txt": {
+      "fingerprint": "8456fe9b18b964cafae8d8b23e182ce98287982d",
+      "doc_id": "local_65b56df17a221a31",
+      "chunks": 7,
+      "name": "Souhlas zákonného zástupce.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    },
+    "C:\\Users\\jakub\\Desktop\\chatbbot\\backend\\storage\\texts\\Souhlas zákonného zástupce_dětské běhy - kopie.txt": {
+      "fingerprint": "440aa31d5b491a3d4fa40ff05e823a8acfa71fbc",
+      "doc_id": "local_804ac699a9ae1f10",
+      "chunks": 7,
+      "name": "Souhlas zákonného zástupce_dětské běhy - kopie.txt",
+      "model_name": "intfloat/multilingual-e5-small"
+    }
+  }
+}
