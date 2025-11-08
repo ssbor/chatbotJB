@@ -108,36 +108,75 @@
         } catch {}
       }
 
-      async function askQuestion() {
-        const q = byId('question').value.trim();
-        if (!q) return;
-        byId('answer').style.display = 'block';
-        byId('answer').textContent = 'Vyhledávám odpověď…';
-        byId('sources').textContent = '';
-        try {
-            const res = await fetch(apiUrl('/ask'), {
+async function askQuestion() {
+    const q = byId('question').value.trim();
+    if (!q) return;
+
+    // !!!!!!!!!!
+    // TADY ZADEJTE SVŮJ KLÍČ od OpenAI
+    // !!!!!!!!!!
+    const MY_API_KEY = "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"; // <--- VLOŽTE SVŮJ KLÍČ PŘÍMO SEM
+
+
+    byId('answer').style.display = 'block';
+    byId('answer').textContent = 'Vyhledávám odpověď…';
+    byId('sources').textContent = '';
+    
+    try {
+        const res = await fetch(apiUrl('/ask'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question: q, k: 5 })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data?.detail || 'Chyba dotazu');
-          byId('answer').textContent = data.answer || '';
-          let ss = (data.sources || []).map(s => `• ${s.source} (část ${s.chunk_index})`).join('\n');
-          if (data.generation_backend) {
+            
+            // --- TADY JE TA DŮLEŽITÁ ZMĚNA ---
+            // Posíláme otázku, počet kusů (k) A VÁŠ API KLÍČ
+            body: JSON.stringify({ 
+                question: q, 
+                k: 5,
+                openai_api_key: MY_API_KEY // Použijeme klíč zadaný výše
+            })
+            // ------------------------------------
+        });
+
+        // Vylepšené zpracování chyb
+        if (!res.ok) {
+            // Pokud server vrátí chybu (např. 422), odpověď také není platný JSON
+            // Musíme ji přečíst jako text, abychom viděli, co se stalo
+            let errorMsg = `Server vrátil chybu: ${res.status}`;
+            try {
+                const errorData = await res.json();
+                // data.detail je to, co posílá FastAPI při validaci
+                errorMsg = errorData.detail || JSON.stringify(errorData); 
+            } catch {
+                // Pokud ani tělo chyby není JSON, přečteme ho jako text
+                errorMsg = await res.text();
+            }
+            throw new Error(errorMsg);
+        }
+
+        // Pokud je vše OK, pokračujeme
+        const data = await res.json();
+
+        byId('answer').textContent = data.answer || '';
+        let ss = (data.sources || []).map(s => `• ${s.source} (část ${s.chunk_index})`).join('\n');
+        
+        if (data.generation_backend) {
             const gb = data.generation_backend;
             const used = data.used_model ? ` (${data.used_model})` : '';
-            const gline = `Generátor: ${gb}${used}${data.generation_status==='fallback' ? ' – použit fallback' : ''}`;
+            
+            // Tady uvidíte, jestli to jelo přes AI nebo spadlo do fallbacku
+            const gline = `Generátor: ${gb}${used}${data.generation_status === 'fallback' ? ' – použit fallback' : ''}`;
             ss = gline + (ss ? '\n' + ss : '');
-          }
-          if (data.generation_error) {
-            ss = `[${data.generation_error}]` + (ss ? '\n' + ss : '');
-          }
-          byId('sources').textContent = ss;
-        } catch (e) {
-          byId('answer').textContent = 'Chyba: ' + (e?.message || e);
         }
-      }
+        if (data.generation_error) {
+            ss = `[${data.generation_error}]` + (ss ? '\n' + ss : '');
+        }
+        byId('sources').textContent = ss;
+
+    } catch (e) {
+        // Tady se teď zobrazí ta chyba serveru (místo té vaší '...pattern')
+        byId('answer').textContent = 'Chyba: ' + (e?.message || e);
+    }
+}
       byId('btnAsk').addEventListener('click', askQuestion);
       byId('question').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') askQuestion(); });
         byId('btnSetApi').addEventListener('click', () => {
@@ -151,3 +190,4 @@
     </script>
   </body>
 </html>
+
