@@ -113,7 +113,7 @@ async function askQuestion() {
     if (!q) return;
 
     // !!!!!!!!!!
-    // TADY ZADEJTE SVŮJ KLÍČ od OpenAI
+    // ZNOVU SEM VLOŽTE SVŮJ KLÍČ od OpenAI
     // !!!!!!!!!!
     const MY_API_KEY = "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"; // <--- VLOŽTE SVŮJ KLÍČ PŘÍMO SEM
 
@@ -127,43 +127,36 @@ async function askQuestion() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             
-            // --- TADY JE TA DŮLEŽITÁ ZMĚNA ---
-            // Posíláme otázku, počet kusů (k) A VÁŠ API KLÍČ
+            // Ujistěte se, že tento JSON je naprosto správně:
             body: JSON.stringify({ 
                 question: q, 
-                k: 5,
-                openai_api_key: MY_API_KEY // Použijeme klíč zadaný výše
+                k: 5, // <-- Ujistěte se, že je zde čárka
+                openai_api_key: MY_API_KEY
             })
-            // ------------------------------------
         });
 
-        // Vylepšené zpracování chyb
+        // --- TOTO JE OPRAVENÁ ČÁST ---
+        // Pokud odpověď NENÍ v pořádku (např. chyba 422 nebo 500)
         if (!res.ok) {
-            // Pokud server vrátí chybu (např. 422), odpověď také není platný JSON
-            // Musíme ji přečíst jako text, abychom viděli, co se stalo
-            let errorMsg = `Server vrátil chybu: ${res.status}`;
-            try {
-                const errorData = await res.json();
-                // data.detail je to, co posílá FastAPI při validaci
-                errorMsg = errorData.detail || JSON.stringify(errorData); 
-            } catch {
-                // Pokud ani tělo chyby není JSON, přečteme ho jako text
-                errorMsg = await res.text();
-            }
-            throw new Error(errorMsg);
+            // Přečteme tělo chyby jako TEXT (jen jednou!).
+            // To nám ukáže chybu, ať už je to JSON (pro chybu 422) nebo HTML (pro chybu 500).
+            const errorText = await res.text();
+            
+            // A vyhodíme ji, aby ji zobrazil 'catch' blok
+            throw new Error(errorText); 
         }
+        // --- KONEC OPRAVENÉ ČÁSTI ---
 
-        // Pokud je vše OK, pokračujeme
+        // Pokud bylo vše v pořádku, pokračujeme ve čtení JSONu
         const data = await res.json();
 
+        // Zbytek kódu pro zobrazení odpovědi (bez změny)
         byId('answer').textContent = data.answer || '';
         let ss = (data.sources || []).map(s => `• ${s.source} (část ${s.chunk_index})`).join('\n');
         
         if (data.generation_backend) {
             const gb = data.generation_backend;
             const used = data.used_model ? ` (${data.used_model})` : '';
-            
-            // Tady uvidíte, jestli to jelo přes AI nebo spadlo do fallbacku
             const gline = `Generátor: ${gb}${used}${data.generation_status === 'fallback' ? ' – použit fallback' : ''}`;
             ss = gline + (ss ? '\n' + ss : '');
         }
@@ -173,7 +166,8 @@ async function askQuestion() {
         byId('sources').textContent = ss;
 
     } catch (e) {
-        // Tady se teď zobrazí ta chyba serveru (místo té vaší '...pattern')
+        // Tady se teď zobrazí ta chyba serveru
+        // (např. '{"detail":"The string did not match..."}' )
         byId('answer').textContent = 'Chyba: ' + (e?.message || e);
     }
 }
@@ -190,4 +184,5 @@ async function askQuestion() {
     </script>
   </body>
 </html>
+
 
