@@ -168,9 +168,18 @@ vector_store = LocalVectorStore(CHROMA_DIR, EMBED_MODEL_NAME)
 app = FastAPI(title="PDF QA Chatbot", version="0.1.0")
 
 # Allow local dev origins (frontend served by this app too)
+origins = [
+    "https://ssbor.github.io",  # Povolí váš GitHub Pages frontend
+    # Pokud testujete i lokálně, můžete přidat:
+    # "http://localhost:8000",
+    # "http://127.0.0.1:8000",
+    # "http://localhost:5500",
+    # "http://127.0.0.1:5500"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,  # <-- Tady je ta změna
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -661,6 +670,7 @@ async def ask(req: AskRequest) -> AskResponse:
 # --- Mount static frontend last so it doesn't overshadow API routes ---
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+
 
 
 
